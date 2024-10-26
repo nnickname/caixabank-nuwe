@@ -13,7 +13,7 @@ const lightTheme = createTheme({
             main: '#005C9E', // Darker blue
         },
         background: {
-            default: '#F4F5F7', // Light background
+            default: '#F5F5F5', // Light background
             paper: '#FFFFFF', // White paper background
         },
         text: {
@@ -64,8 +64,8 @@ const darkTheme = createTheme({
             main: '#ff4081', // Secondary color in dark mode
         },
         background: {
-            default: '#121212', // Dark background
-            paper: '#1e1e1e', // Darker paper background
+            default: '#23120B', // Dark background
+            paper: '#071952', // Darker paper background
         },
         text: {
             primary: '#ffffff', // Light text in dark mode
