@@ -1,10 +1,12 @@
-import React, { Profiler } from 'react';
+import React, { Profiler, useEffect } from 'react';
 import { useStore } from '@nanostores/react';
+import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Grid, Paper } from '@mui/material';
 import ExportButton from './ExportButton';
 import DownloadProfilerData from './DownloadProfilerData';
 import { onRenderCallback } from '../utils/onRenderCallback';
 import { transactionsStore } from '../stores/transactionStore';
+import { authStore } from '../stores/authStore'; // Asumimos que existe este store
 
 // Lazy load components for performance optimization
 const AnalysisGraph = React.lazy(() => import('./AnalysisGraph'));
@@ -15,6 +17,14 @@ const RecentTransactions = React.lazy(() => import('./RecentTransactions'));
 
 function Dashboard() {
     const transactions = useStore(transactionsStore);
+    const auth = useStore(authStore);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!auth.isAuthenticated) {
+            navigate('/login');
+        }
+    }, [auth.isAuthenticated, navigate]);
 
     // Replace the placeholder values with calculations for total income, total expenses, and balance.
     const totalIncome = 0; // Calculate total income from transactions

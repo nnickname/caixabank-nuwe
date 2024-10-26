@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, CssBaseline, Box, Container } from '@mui/material';
 import { lightTheme, darkTheme } from './theme'; // Import both themes
-import Navbar from './components/Navbar';
 import Dashboard from './components/Dashboard';
 import TransactionList from './components/TransactionList';
 import Analysis from './components/Analysis';
@@ -17,6 +16,7 @@ import ProtectedRoute from './components/ProtectedRoute'; // Import for route pr
 import { authStore } from './stores/authStore'; // Import auth store for authentication state
 import { useStore } from '@nanostores/react'; // Nanostores to track auth
 import BudgetAlert from './components/BudgetAlert'; // Importar BudgetAlert
+import Navbar from './modules/pcu/components/navbar.tsx';
 
 function App() {
   const auth = useStore(authStore); // Get authentication status from auth store
@@ -52,9 +52,9 @@ function App() {
             minHeight: '100vh', // Ensures footer is at the bottom
           }}
         >
-          <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
+          <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode} isAuthenticated={auth.isAuthenticated} user={auth.user} />
           <Container sx={{ flex: 1, mt: 4 }}>
-            <BudgetAlert /> {/* Mostrar BudgetAlert aquí */}
+            <BudgetAlert />
             <Routes>
               {/* Protected routes */}
               <Route element={<ProtectedRoute isAuthenticated={auth.isAuthenticated} />}>
