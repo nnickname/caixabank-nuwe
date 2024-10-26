@@ -10,7 +10,7 @@ import Analysis from './components/Analysis';
 import Settings from './components/Settings';
 import Footer from './components/Footer';
 import SupportPage from './components/SupportPage';
-import LoginPage from './components/LoginPage';
+import LoginPage from './modules/auth/components/login_form';
 import RegisterPage from './components/RegisterPage';
 import ProtectedRoute from './components/ProtectedRoute'; // Import for route protection
 import { authStore } from './stores/authStore'; // Import auth store for authentication state
@@ -23,7 +23,7 @@ function App() {
 
   // State to track dark mode
   const [isDarkMode, setIsDarkMode] = useState(
-    localStorage.getItem('theme') === 'dark'
+    localStorage.getItem('theme') === 'light'
   );
 
   // Toggle theme function
