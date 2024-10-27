@@ -6,42 +6,54 @@ import {
     TextField,
     Typography,
     Alert,
-    Grid
+    Grid,
+    Card,
+    CardContent
 } from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [showCredentials, setShowCredentials] = useState(false);
-
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const navigate = useNavigate();
     const defaultCredentials = {
         email: 'default@example.com',
         password: 'password123'
     };
 
-    const handleLogin = (e) => {
-        e.preventDefault();
+    const handleLogin = (data) => {
+        const { email, password } = data;
+        setError('');
 
         // Validate that fields are not empty
-        // Instructions:
-        // - Check if the email and password fields are filled.
         if (!email || !password) {
-            // - If either is empty, set an appropriate error message.
+            setError('Por favor, complete todos los campos.');
+            return;
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            setError('Por favor, ingrese un correo electrónico válido.');
             return;
         }
 
         // Validate credentials
-        // Instructions:
-        // - Check if the entered credentials match the default credentials or the stored user credentials.
-        // - If valid, call the `login` function and navigate to the homepage.
-        // - If invalid, set an error message.
+        if (email === defaultCredentials.email && password === defaultCredentials.password) {
+            login({email, password});
+            setTimeout(() => {
+                navigate('/');
+            }, 1000);
+        } else {
+            setError('Credenciales inválidas. Por favor, intente de nuevo.');
+        }
     };
 
-    const handleShowDefaultCredentials = () => {
-        // Show default credentials in case the user requests it
-        setEmail(defaultCredentials.email);
-        setPassword(defaultCredentials.password);
+    
+
+    const handleForgotPassword = () => {
         setShowCredentials(true);
     };
 
@@ -50,24 +62,30 @@ function LoginPage() {
             <Typography variant="h4" gutterBottom>
                 Login
             </Typography>
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleSubmit(handleLogin)}>
                 <TextField
                     label="Email"
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    {...register('email', { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
                     fullWidth
                     margin="normal"
+                    id="email"
+                    error={!!errors.email}
+                    helperText={errors.email?.message?.toString()}
                 />
                 <TextField
                     label="Password"
                     type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    {...register('password', { required: true })}
                     fullWidth
                     margin="normal"
+                    id="password"
+                    error={!!errors.password}
+                    helperText={errors.password?.message?.toString()}
                 />
                 <Button
+                    id="login"
+                    
                     name="login"
                     type="submit"
                     variant="contained"
@@ -83,12 +101,36 @@ function LoginPage() {
             {/* - Use the Alert component to display the error message if one exists. */}
             {/* - Ensure that registration and forgot password options are displayed below the error message if present. */}
 
-            {showCredentials && (
-                <Alert severity="info" sx={{ mt: 2 }}>
-                    <strong>Email:</strong> {defaultCredentials.email}<br />
-                    <strong>Password:</strong> {defaultCredentials.password}
+            {error && (
+                <Alert severity="error" sx={{ mt: 2 }}>
+                    {error}
                 </Alert>
             )}
+
+            {showCredentials && (
+                <Card sx={{ mt: 2 }}>
+                    <CardContent>
+                        <Typography variant="h6" gutterBottom>
+                            Credenciales por defecto:
+                        </Typography>
+                        <Typography><strong>Email:</strong> {defaultCredentials.email}</Typography>
+                        <Typography><strong>Contraseña:</strong> {defaultCredentials.password}</Typography>
+                    </CardContent>
+                </Card>
+            )}
+
+            <Grid container justifyContent="space-between" sx={{ mt: 2 }}>
+                <Grid item>
+                    <Button variant="text" color="primary" onClick={() => {/* Agregar navegación a la página de registro */}}>
+                        Registrarse
+                    </Button>
+                </Grid>
+                <Grid item>
+                    <Button variant="text" color="primary" onClick={handleForgotPassword}>
+                        ¿Olvidó su contraseña?
+                    </Button>
+                </Grid>
+            </Grid>
         </Box>
     );
 }
