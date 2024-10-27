@@ -11,7 +11,7 @@ import Settings from './components/Settings';
 import Footer from './modules/pcu/components/footer';
 import SupportPage from './components/SupportPage';
 import LoginPage from './modules/auth/components/login_form';
-import RegisterPage from './components/RegisterPage';
+import RegisterPage from './modules/auth/components/register_form';
 import ProtectedRoute from './components/ProtectedRoute'; // Import for route protection
 import { authStore } from './stores/authStore'; // Import auth store for authentication state
 import { useStore } from '@nanostores/react'; // Nanostores to track auth
@@ -23,7 +23,7 @@ function App() {
 
   // State to track dark mode
   const [isDarkMode, setIsDarkMode] = useState(
-    localStorage.getItem('theme') === 'light'
+    localStorage.getItem('theme') === 'dark'
   );
 
   // Toggle theme function
