@@ -62,11 +62,13 @@ const Navbar = ({toggleTheme, isDarkMode, isAuthenticated, user }) => {
                         <IconButton onClick={toggleTheme} color="inherit">
                             {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
                         </IconButton>
-                        <IconButton>
-                            <Badge color="error" variant="dot">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
+                        {isAuthenticated && (
+                            <IconButton>
+                                <Badge color="error" variant="dot">
+                                    <NotificationsIcon />
+                                </Badge>
+                            </IconButton>
+                        )}
 
                         {/* User avatar */}
                         {isAuthenticated && (

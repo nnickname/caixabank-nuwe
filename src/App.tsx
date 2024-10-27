@@ -8,7 +8,7 @@ import Dashboard from './components/Dashboard';
 import TransactionList from './components/TransactionList';
 import Analysis from './components/Analysis';
 import Settings from './components/Settings';
-import Footer from './components/Footer';
+import Footer from './modules/pcu/components/footer';
 import SupportPage from './components/SupportPage';
 import LoginPage from './modules/auth/components/login_form';
 import RegisterPage from './components/RegisterPage';
