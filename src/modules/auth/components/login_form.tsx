@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { login } from '../../../stores/authStore';
+import React, { useState, useEffect } from 'react';
+import { authStore, login } from '../../../models/user/user.store';
 import {
     Box,
     Button,
@@ -12,16 +12,24 @@ import {
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useStore } from '@nanostores/react';
 
 function LoginPage() {
     const [error, setError] = useState('');
     const [showCredentials, setShowCredentials] = useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm();
     const navigate = useNavigate();
+    const auth = useStore(authStore);
     const defaultCredentials = {
         email: 'default@example.com',
         password: 'password123'
     };
+
+    useEffect(() => {
+        if (auth.isAuthenticated) {
+            navigate('/');
+        }
+    }, [navigate]);
 
     const handleLogin = (data) => {
         const { email, password } = data;

@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, CssBaseline, Box, Container } from '@mui/material';
 import { lightTheme, darkTheme } from './theme'; // Import both themes
 import Dashboard from './components/Dashboard';
-import TransactionList from './components/TransactionList';
+import TransactionList from './modules/transactions/lib/transaction.layout';
 import Analysis from './components/Analysis';
 import Settings from './components/Settings';
 import Footer from './modules/pcu/components/footer';
@@ -13,7 +13,7 @@ import SupportPage from './components/SupportPage';
 import LoginPage from './modules/auth/components/login_form';
 import RegisterPage from './modules/auth/components/register_form';
 import ProtectedRoute from './components/ProtectedRoute'; // Import for route protection
-import { authStore } from './stores/authStore'; // Import auth store for authentication state
+import { authStore } from './models/user/user.store'; // Import auth store for authentication state
 import { useStore } from '@nanostores/react'; // Nanostores to track auth
 import BudgetAlert from './components/BudgetAlert'; // Importar BudgetAlert
 import Navbar from './modules/pcu/components/navbar.tsx';
@@ -52,7 +52,7 @@ function App() {
             minHeight: '100vh', // Ensures footer is at the bottom
           }}
         >
-          <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode} isAuthenticated={auth.isAuthenticated} user={auth.user} />
+          <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode} isAuthenticated={auth.isAuthenticated} user={auth.user} transactions={auth.transactions} />
           <Container sx={{ flex: 1, mt: 4 }}>
             <BudgetAlert />
             <Routes>

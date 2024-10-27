@@ -5,9 +5,8 @@ import { Box, Typography, Grid, Paper } from '@mui/material';
 import ExportButton from './ExportButton';
 import DownloadProfilerData from './DownloadProfilerData';
 import { onRenderCallback } from '../utils/onRenderCallback';
-import { transactionsStore } from '../stores/transactionStore';
-import { authStore } from '../stores/authStore'; // Asumimos que existe este store
-
+import { transactionsStore } from '../models/transactions/transactions.store';
+import { authStore } from '../models/user/user.store';
 // Lazy load components for performance optimization
 const AnalysisGraph = React.lazy(() => import('./AnalysisGraph'));
 const BalanceOverTime = React.lazy(() => import('./BalanceOverTime'));

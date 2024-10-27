@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, IconButton, Drawer, Box, Button, Badge, Avatar, useMediaQuery, useTheme } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Drawer, Box, Button, Badge, Avatar, useMediaQuery, useTheme, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Brightness4Icon from '@mui/icons-material/Brightness4'; // Dark mode icon
@@ -7,17 +7,52 @@ import Brightness7Icon from '@mui/icons-material/Brightness7'; // Light mode ico
 import { Link } from 'react-router-dom';
 import LogoDarkCaixa from '../../../assets/caixabank-icon.png';
 import LogoLightCaixa from '../../../assets/caixabank-icon-blue.png';
+// Importar el componente NotificationModal
+import NotificationModal from './notification.modal';
+import { Transaction } from '../../../models/transactions/transactions.model';
 
-const Navbar = ({toggleTheme, isDarkMode, isAuthenticated, user }) => {
-    const [drawerOpen, setDrawerOpen] = useState(false);
+// Define interfaces for props and other types
+interface NavLink {
+  label: string;
+  path: string;
+}
+
+interface User {
+  email: string;
+  avatarUrl?: string;
+}
+
+
+interface NavbarProps {
+  toggleTheme: () => void;
+  isDarkMode: boolean;
+  isAuthenticated: boolean;
+  user: User;
+  transactions: Transaction[];
+}
+
+const Navbar: React.FC<NavbarProps> = ({ toggleTheme, isDarkMode, isAuthenticated, user, transactions }) => {
+    const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
+    // Agregar estado para controlar la visibilidad del modal de notificaciones
+    const [notificationModalOpen, setNotificationModalOpen] = useState<boolean>(false);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-    const toggleDrawer = (open) => (event) => {
-        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+    const navlinks: NavLink[] = [
+        { label: 'Dashboard', path: '/' },
+        { label: 'Transactions', path: '/transactions' },
+        { label: 'Settings', path: '/setting' },
+        { label: 'Logout', path: '/logout' }
+    ];
+    const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+        if (event.type === 'keydown' && ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')) {
             return;
         }
         setDrawerOpen(open);
+    };
+
+    // Función para abrir/cerrar el modal de notificaciones
+    const toggleNotificationModal = () => {
+        setNotificationModalOpen(!notificationModalOpen);
     };
 
     return (
@@ -31,12 +66,13 @@ const Navbar = ({toggleTheme, isDarkMode, isAuthenticated, user }) => {
                     )}
 
                     {/* Add CaixaBank logo */}
-                    <Box sx={{ marginRight: 2 }}>
+                    <Box sx={{display: 'flex', marginRight: 2 }}>
                         <img 
                             src={isDarkMode ? LogoLightCaixa : LogoDarkCaixa} 
                             alt="CaixaBank Logo" 
                             height="40" 
                         />
+                        <Typography variant="h6" sx={{ marginLeft: 0.5, fontWeight: 'bold', fontStyle: 'italic'}}>Caixa Bank</Typography>
                     </Box>
 
                     {/* Navigation links */}
@@ -44,9 +80,16 @@ const Navbar = ({toggleTheme, isDarkMode, isAuthenticated, user }) => {
                         <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
                             {isAuthenticated ? (
                                 <>
-                                    <Button color="inherit" component={Link} to="/dashboard">Dashboard</Button>
-                                    <Button color="inherit" component={Link} to="/settings">Settings</Button>
-                                    <Button color="inherit" component={Link} to="/logout">Logout</Button>
+                                    {navlinks.map((item, index) => (
+                                        <Button 
+                                            key={index}
+                                            color="inherit" 
+                                            component={Link} 
+                                            to={item.path}
+                                        >
+                                            {item.label}
+                                        </Button>
+                                    ))}
                                 </>
                             ) : (
                                 <>
@@ -58,12 +101,12 @@ const Navbar = ({toggleTheme, isDarkMode, isAuthenticated, user }) => {
                     )}
                     
                     
-                    <Box>
+                    <Box sx={{display: 'flex', alignItems: 'center'}}>
                         <IconButton onClick={toggleTheme} color="inherit">
                             {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
                         </IconButton>
                         {isAuthenticated && (
-                            <IconButton>
+                            <IconButton onClick={toggleNotificationModal}>
                                 <Badge color="error" variant="dot">
                                     <NotificationsIcon />
                                 </Badge>
@@ -87,9 +130,11 @@ const Navbar = ({toggleTheme, isDarkMode, isAuthenticated, user }) => {
                     {/* Drawer navigation links */}
                     {isAuthenticated ? (
                         <>
-                            <Button fullWidth component={Link} to="/dashboard">Dashboard</Button>
-                            <Button fullWidth component={Link} to="/transactions">Transactions</Button>
-                            <Button fullWidth component={Link} to="/settings">Settings</Button>
+                            {navlinks.map((item, index) => (
+                                <Button key={index} fullWidth component={Link} to={item.path}>
+                                    {item.label}
+                                </Button>
+                            ))}
                         </>
                     ) : (
                         <>
@@ -99,6 +144,11 @@ const Navbar = ({toggleTheme, isDarkMode, isAuthenticated, user }) => {
                     )}
                 </Box>
             </Drawer>
+
+            {/* Add NotificationModal */}
+            <NotificationModal
+                open={notificationModalOpen}
+                onClose={toggleNotificationModal} transactions={transactions}            />
         </>
     );
 };

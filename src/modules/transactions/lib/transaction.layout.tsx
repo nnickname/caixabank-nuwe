@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { useStore } from '@nanostores/react';
-import { transactionsStore } from '../stores/transactionStore';
+import { transactionsStore } from '../../../stores/transactionStore';
 import {
     Table,
     TableBody,
