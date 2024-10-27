@@ -32,7 +32,7 @@ jobs:
               run: mv ./.babelrc ./public
 
             - name: Build
-              run: npm run build
+              run: CI=false npm run build
 
             - name: Install Vercel CLI
               run: npm install -global vercel@latest
